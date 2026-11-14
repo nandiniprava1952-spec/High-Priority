@@ -280,7 +280,7 @@
     document.querySelector('meta[name=theme-color]').content = '#2a2418';
   }
   $('#enter').addEventListener('click', enter);
-  $('#home').addEventListener('click', showCover);
+  $('#home').addEventListener('click', () => { closeVideo(); goTab(tabs[0].id); });
   $('#logo').addEventListener('click', () => { closeVideo(); goTab(tabs[0].id); });
   $('#offbtn').addEventListener('click', () => goTab('offline'));
   if (/^#\/(s|t)\//.test(location.hash)) enter();          // deep link skips the cover

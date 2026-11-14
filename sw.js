@@ -1,5 +1,5 @@
 // Bump VERSION whenever you change app files so installed copies update.
-const VERSION = 'mch-v8';
+const VERSION = 'mch-v9';
 const OFFLINE = 'mch-offline-v1';   // files the user saved for offline use (never auto-deleted)
 const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'data.js', 'manifest.webmanifest',
   'assets/cover.jpg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png', 'icons/apple-touch-icon.png'];
