@@ -10,11 +10,10 @@
   const mime = (f) => MIME[f.split('.').pop().toLowerCase()] || 'application/octet-stream';
   const fmt = (b) => b >= 1e9 ? (b / 1e9).toFixed(1) + ' GB' : b >= 1e6 ? (b / 1e6).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1e3)) + ' KB';
 
-  const DAY_SHORT = { day1_maternal: 'Maternal', day1_newborn: 'Newborn', day2_programs: 'Programs', video_gallery: 'Videos', offline: 'Offline' };
-  const DAY_ICON = { day1_maternal: '🤱', day1_newborn: '👶', day2_programs: '📋', video_gallery: '🎬', offline: '📥' };
-  const DAY_SUB = { day1_maternal: 'Day 1', day1_newborn: 'Day 1', day2_programs: 'Day 2', video_gallery: 'Gallery', offline: 'Saved' };
+  const DAY_SHORT = { day1_maternal: 'Maternal', day1_newborn: 'Newborn', day2_programs: 'Programs', video_gallery: 'Videos' };
+  const DAY_ICON = { day1_maternal: '🤱', day1_newborn: '👶', day2_programs: '📋', video_gallery: '🎬' };
+  const DAY_SUB = { day1_maternal: 'Day 1', day1_newborn: 'Day 1', day2_programs: 'Day 2', video_gallery: 'Gallery' };
   const tabs = D.days.map((d) => ({ id: d.id, label: DAY_SHORT[d.id], full: d.label }));
-  tabs.push({ id: 'offline', label: 'Offline', full: 'Saved on this device' });
 
   // ---- viewed topics (stored on this device only) ----
   const store = {
@@ -121,43 +120,22 @@
     if (!quiet) { toast('Removed from offline storage'); afterChange(); }
   }
 
-  let bulk = null;
-  async function saveAll(tabId) {
-    if (bulk) return;
-    const units = tabId === 'video_gallery' ? D.videos.map((_, i) => 'v:' + i) : D.sections.filter((s) => s.day === tabId).map((s) => 's:' + s.id);
-    const todo = units.filter((u) => unitState(u) !== 'saved');
-    if (!todo.length) return;
-    if (!navigator.onLine) return toast('You are offline — connect to the internet to save.');
-    if (!confirm(`Save ${todo.length} item${todo.length > 1 ? 's' : ''} for offline use?\nThis uses mobile data and phone storage.`)) return;
-    bulk = { tabId, i: 0, n: todo.length }; paintBulk();
-    try {
-      for (const u of todo) { bulk.i++; paintBulk(); await saveUnit(u, true); }
-      toast('All saved — available offline');
-    } catch { /* toast already shown */ }
-    bulk = null; afterChange();
-  }
-  function paintBulk() { const b = document.querySelector('[data-saveall]'); if (b && bulk) { b.textContent = `Saving ${bulk.i} of ${bulk.n}…`; b.classList.add('busy'); } }
-  function saveAllBtn(tabId, units) {
-    const left = units.filter((u) => unitState(u) !== 'saved').length;
-    const what = tabId === 'video_gallery' ? 'videos' : 'topics';
-    return `<button class="saveall ${left ? '' : 'done'}" data-saveall="${tabId}">${left ? `⬇ Save all ${left} ${what} for offline` : `✓ All ${what} saved offline`}</button>`;
-  }
-
   // ---------- Views ----------
   let query = '';
 
   function homeView(dayId) {
+    const isOff = dayId === 'offline';
     const tab = tabs.find((t) => t.id === dayId) || tabs[0];
-    setBar(false, 'MCH Training Hub', tab.full);
+    setBar(false, 'MCH Training Hub', isOff ? 'Saved on this device' : tab.full);
     const nav = $('#bnav'); nav.hidden = false;
     nav.innerHTML = tabs.map((t) =>
-      `<button role="tab" aria-selected="${t.id === tab.id && !query}" data-tab="${t.id}"><span class="ni">${DAY_ICON[t.id]}</span><span class="nt">${esc(DAY_SHORT[t.id])}</span><span class="ns">${DAY_SUB[t.id]}</span></button>`).join('');
+      `<button role="tab" aria-selected="${!isOff && t.id === tab.id && !query}" data-tab="${t.id}"><span class="ni">${DAY_ICON[t.id]}</span><span class="nt">${esc(DAY_SHORT[t.id])}</span><span class="ns">${DAY_SUB[t.id]}</span></button>`).join('');
 
-    if (tab.id === 'offline') return offlineView();
+    if (isOff) return offlineView();
 
     if (tab.id === 'video_gallery' && !query) {
       const us = D.videos.map((_, i) => 'v:' + i);
-      main.innerHTML = (OFF.ok ? saveAllBtn(tab.id, us) : '') + `<div class="vgrid">${D.videos.map((v, i) => `
+      main.innerHTML = `<div class="vgrid">${D.videos.map((v, i) => `
         <div class="vcard">
           <button class="poster" data-video="${i}" aria-label="Play ${esc(v.title)}"><img loading="lazy" src="${esc(U(v.cover))}" alt="" onerror="this.style.display='none'"><span class="play"></span></button>
           <div class="vfoot"><span class="vt">${esc(v.title)}</span>${OFF.ok ? unitBtn('v:' + i, true) : ''}</div>
@@ -174,8 +152,7 @@
     main.innerHTML =
       `<input id="q" class="search" type="search" placeholder="Search all topics…" value="${esc(query)}" autocomplete="off">` +
       (q ? `<div class="progress">${list.length} result${list.length === 1 ? '' : 's'}</div>` :
-        `<div class="progress">${done} of ${mine.length} topics viewed<div class="bar"><i style="width:${mine.length ? done / mine.length * 100 : 0}%"></i></div></div>` +
-        (OFF.ok ? saveAllBtn(tab.id, mine.map((s) => 's:' + s.id)) : '')) +
+        `<div class="progress">${done} of ${mine.length} topics viewed<div class="bar"><i style="width:${mine.length ? done / mine.length * 100 : 0}%"></i></div></div>`) +
       (list.length ? `<div class="grid">${list.map((s) => cardHtml(s, viewed)).join('')}</div>` : `<div class="empty">No topics match “${esc(query)}”.</div>`);
 
     const q$ = $('#q');
@@ -205,7 +182,7 @@
          <small>${OFF.sizes.size} file${OFF.sizes.size === 1 ? '' : 's'} · <span id="quota"></span></small></div>
          ${empty ? '' : '<button class="rm wide" data-clearall="1">Remove all</button>'}</div>` +
       (OFF.ok ? '' : `<div class="note">Offline saving becomes available after the app has loaded once with internet. Reload the app to enable it.</div>`) +
-      (empty ? `<div class="empty">Open any topic or video and tap <b>⬇ Save for offline</b>,<br>or use <b>Save all</b> on a day tab.<br>Saved items open without internet.</div>` : '') +
+      (empty ? `<div class="empty">Open any topic or video and tap <b>⬇ Save for offline</b>.<br>Saved items open without internet.</div>` : '') +
       (secs.length ? `<h3 class="sub">Topics</h3><div class="grid">${secs.map((s) => `
         <div class="row">${cardHtml(s, viewed)}<button class="rm" data-remove="s:${s.id}" aria-label="Remove">🗑</button></div>`).join('')}</div>` : '') +
       (vids.length ? `<h3 class="sub">Videos</h3><div class="vgrid">${vids.map(({ v, i }) => `
@@ -270,7 +247,7 @@
   const goTab = (id) => { query = ''; const h = '#/t/' + id; if (location.hash === h) route(); else location.hash = h; scrollTo(0, 0); };
 
   main.addEventListener('click', (e) => {
-    const t = e.target.closest('[data-sec],[data-video],[data-unit],[data-saveall],[data-remove],[data-clearall]');
+    const t = e.target.closest('[data-sec],[data-video],[data-unit],[data-remove],[data-clearall]');
     if (!t) return;
     const d = t.dataset;
     if (d.sec) location.hash = '#/s/' + d.sec;
@@ -280,7 +257,6 @@
       if (unitState(d.unit) === 'saved') { if (confirm('Remove this from offline storage?')) removeUnit(d.unit); }
       else saveUnit(d.unit).catch(() => {});
     }
-    else if (d.saveall) saveAll(d.saveall);
     else if (d.remove) { if (confirm('Remove this from offline storage?')) removeUnit(d.remove); }
     else if (d.clearall) { if (confirm('Remove everything saved for offline use?')) caches.delete(OFF.name).then(() => { OFF.sizes.clear(); toast('Offline storage cleared'); afterChange(); }); }
   });
@@ -305,6 +281,7 @@
   }
   $('#enter').addEventListener('click', enter);
   $('#home').addEventListener('click', showCover);
+  $('#offbtn').addEventListener('click', () => goTab('offline'));
   if (/^#\/(s|t)\//.test(location.hash)) enter();          // deep link skips the cover
 
   // ---------- Video player ----------
@@ -337,6 +314,7 @@
     const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
     if (Math.abs(dx) < 70 || Math.abs(dy) > Math.abs(dx) * 0.6 || Date.now() - st > 700) return;
     const cur = location.hash.startsWith('#/t/') ? location.hash.slice(4) : tabs[0].id;
+    if (cur === 'offline') return;
     const i = tabs.findIndex((t) => t.id === cur) + (dx < 0 ? 1 : -1);
     if (i >= 0 && i < tabs.length) goTab(tabs[i].id);
   }, { passive: true });
