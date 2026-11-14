@@ -6,7 +6,9 @@
   const VIEW = (f) => 'https://docs.google.com/viewer?url=' + encodeURIComponent(U(f)) + '&embedded=true';
   const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-  const DAY_SHORT = { day1_maternal: 'Day 1 · Maternal', day1_newborn: 'Day 1 · Newborn & Child', day2_programs: 'Day 2 · Programs', video_gallery: '🎥 Videos' };
+  const DAY_SHORT = { day1_maternal: 'Maternal', day1_newborn: 'Newborn', day2_programs: 'Programs', video_gallery: 'Videos' };
+  const DAY_ICON = { day1_maternal: '🤱', day1_newborn: '👶', day2_programs: '📋', video_gallery: '🎬' };
+  const DAY_SUB = { day1_maternal: 'Day 1', day1_newborn: 'Day 1', day2_programs: 'Day 2', video_gallery: 'Gallery' };
   const tabs = D.days.map((d) => ({ id: d.id, label: DAY_SHORT[d.id] || d.label, full: d.label }));
 
   // ---- viewed topics (stored on this device only) ----
@@ -21,8 +23,11 @@
   function homeView(dayId) {
     const tab = tabs.find((t) => t.id === dayId) || tabs[0];
     setBar(false, 'MCH Training Hub', tab.full);
-    const tabsHtml = `<div class="tabs" role="tablist">${tabs.map((t) =>
-      `<button class="tab" role="tab" aria-selected="${t.id === tab.id && !query}" data-tab="${t.id}">${esc(t.label)}</button>`).join('')}</div>`;
+    const tabsHtml = '';
+    const nav = $('#bnav');
+    nav.hidden = false;
+    nav.innerHTML = tabs.map((t) =>
+      `<button role="tab" aria-selected="${t.id === tab.id && !query}" data-tab="${t.id}"><span class="ni">${DAY_ICON[t.id]}</span><span class="nt">${esc(DAY_SHORT[t.id])}</span><span class="ns">${DAY_SUB[t.id]}</span></button>`).join('');
 
     if (tab.id === 'video_gallery' && !query) {
       main.innerHTML = tabsHtml + `<div class="vgrid">${D.videos.map((v, i) => `
@@ -61,6 +66,7 @@
     const i = D.sections.findIndex((s) => s.id === id);
     const s = D.sections[i];
     if (!s) return location.hash = '#/';
+    $('#bnav').hidden = true;
     store.add(s.id);
     setBar(true, `Topic ${s.num}`, tabs.find((t) => t.id === s.day)?.full || '');
     const prev = D.sections[i - 1], next = D.sections[i + 1];
@@ -108,6 +114,7 @@
     else if (t.dataset.sec) location.hash = '#/s/' + t.dataset.sec;
     else if (t.dataset.video) openVideo(D.videos[+t.dataset.video]);
   });
+  $('#bnav').addEventListener('click', (e) => { const t = e.target.closest('[data-tab]'); if (!t) return; query = ''; const h = '#/t/' + t.dataset.tab; if (location.hash === h) route(); else location.hash = h; scrollTo(0, 0); });
   $('#back').addEventListener('click', () => (history.length > 1 ? history.back() : (location.hash = '#/')));
 
   // ---------- Cover / enter ----------
@@ -119,6 +126,7 @@
   function showCover() {
     $('#app').hidden = true; $('#cover').hidden = false;
     document.querySelector('meta[name=theme-color]').content = '#2a2418';
+    $('#bnav').hidden = true;
   }
   $('#enter').addEventListener('click', enter);
   $('#home').addEventListener('click', showCover);
