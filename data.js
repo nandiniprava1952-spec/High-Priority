@@ -483,68 +483,69 @@ window.MCH_DATA={
  "videos": [
   {
    "title": "ADCH 1",
-   "cover": "ADCH1_cover.jpg",
-   "file": "ADCH1_2026-08-18_at_6_50_52_PM.mp4"
+   "cover": "videos/ADCH1.png",
+   "file": "videos/ADCH1_2026-08-18_at_6_50_52_PM.mp4"
   },
   {
    "title": "ADCH 2",
-   "cover": "ADCH2_cover.jpg",
-   "file": "ADCH22026-08-11_at_8_25_54_PM.mp4"
+   "cover": "videos/ADCH2.png",
+   "file": "videos/ADCH22026-08-11_at_8_25_54_PM.mp4"
   },
   {
    "title": "ADCH 3",
-   "cover": "ADCH3_cover.jpg",
-   "file": "ADCH32026-07-13_at_7_49_50_PM.mp4"
+   "cover": "videos/ADCH3.png",
+   "file": "videos/ADCH32026-07-13_at_7_49_50_PM.mp4"
   },
   {
    "title": "ADCH 4",
-   "cover": "ADCH4_cover.jpg",
-   "file": "ADCH4_2026-07-06_at_6_39_47_PM.mp4"
+   "cover": "videos/ADCH4.png",
+   "file": "videos/ADCH4_2026-07-06_at_6_39_47_PM.mp4"
   },
   {
    "title": "HBNC/HBYC Child Development - Part 1",
-   "cover": "HBNC_HBYC_Child_Development_Part1_cover.jpg",
-   "file": "HBNC_HBYC_Child_Development_Part1.mp4"
+   "cover": "videos/HBNC_Part1.png",
+   "file": "videos/HBNC_HBYC_Child_Development_Part1.mp4"
   },
   {
    "title": "HBNC/HBYC Child Development - Part 2",
-   "cover": "HBNC_HBYC_Child_Development_Part2_cover.jpg",
-   "file": "HBNC_HBYC_Child_Development_Part2.mp4"
+   "cover": "videos/HBNC_Part2.png",
+   "file": "videos/HBNC_HBYC_Child_Development_Part2.mp4"
   },
   {
    "title": "HBNC/HBYC Child Development - Part 3",
-   "cover": "HBNC_HBYC_Child_Development_Part3_cover.jpg",
-   "file": "HBNC_HBYC_Child_Development_Part3.mp4"
+   "cover": "videos/HBNC_Part3.png",
+   "file": "videos/HBNC_HBYC_Child_Development_Part3.mp4"
   },
   {
    "title": "HBNC/HBYC Child Development - Part 4",
-   "cover": "HBNC_HBYC_Child_Development_Part4_cover.jpg",
-   "file": "HBNC_HBYC_Child_Development_Part4.mp4"
+   "cover": "videos/HBNC_Part4.png",
+   "file": "videos/HBNC_HBYC_Child_Development_Part4.mp4"
   },
   {
    "title": "HBNC/HBYC Child Development - Part 5",
-   "cover": "HBNC_HBYC_Child_Development_Part5_cover.jpg",
-   "file": "HBNC_HBYC_Child_Development_Part5.mp4"
+   "cover": "videos/HBNC_Part5.png",
+   "file": "videos/HBNC_HBYC_Child_Development_Part5.mp4"
   },
   {
    "title": "HBNC/HBYC Child Development - Part 6",
-   "cover": "HBNC_HBYC_Child_Development_Part6_cover.jpg",
-   "file": "HBNC_HBYC_Child_Development_Part6.mp4"
+   "cover": "videos/HBNC_Part6.png",
+   "file": "videos/HBNC_HBYC_Child_Development_Part6.mp4"
   },
   {
    "title": "KMC Home",
-   "cover": "KMC_Home_cover.jpg",
-   "file": "KMC_Home.mp4"
+   "cover": "videos/KMC_Home.png",
+   "file": "videos/KMC_Home.mp4"
   },
   {
    "title": "IPC Labour Room",
-   "cover": "Ipc_Labour_Room_cover.jpg",
-   "file": "Ipc_Labour_Room.mp4"
+   "cover": "videos/Ipc_Labour_Room_cover.jpg",
+   "file": "videos/Ipc_Labour_Room.mp4"
   },
   {
    "title": "NASG (Non-Pneumatic Anti-Shock Garment)",
-   "cover": "NASG_cover.jpg",
-   "file": "NASG_compressed.mp4"
+   "cover": "videos/NASG_cover.jpg",
+   "file": "videos/NASG_compressed.mp4"
   }
- ]
+ ],
+ "cdn": "https://cdn.jsdelivr.net/gh/nandiniprava1952-spec/High-Priority@main/"
 };
