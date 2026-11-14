@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MCH Training Hub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Maternal &amp; Child Health training: topics, presentations, PDFs and videos.">
+<meta name="theme-color" content="#2a2418">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MCH Hub">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Full-screen cover -->
+<section id="cover" aria-label="Welcome">
+  <img class="cover-img" src="assets/cover.jpg" alt="A mother holding her child close" fetchpriority="high">
+  <div class="cover-shade"></div>
+  <div class="cover-content">
+    <img class="cover-logo" src="icons/icon-192.png" alt="" width="64" height="64">
+    <h1>MCH Training Hub</h1>
+    <p class="cover-sub">Maternal &amp; Child Health<br>presentations · guidelines · videos</p>
+    <button id="enter" class="btn btn-primary" type="button">Get started</button>
+    <button id="install" class="btn btn-ghost" type="button" hidden>Install app</button>
+    <p id="iosHint" class="hint" hidden>To install: tap <b>Share</b>, then <b>Add to Home Screen</b>.</p>
+  </div>
+</section>
+
+<!-- App -->
+<div id="app" hidden>
+  <header class="topbar">
+    <button id="back" class="icon-btn" type="button" aria-label="Back" hidden>
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <img class="brand-logo" src="icons/icon-192.png" alt="" width="34" height="34">
+    <div class="brand"><strong id="title">MCH Training Hub</strong><small id="subtitle">Select a training day</small></div>
+    <span id="net" class="net" hidden>Offline</span>
+    <button id="home" class="icon-btn" type="button" aria-label="Cover">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+    </button>
+  </header>
+
+  <main id="main"></main>
+</div>
+
+<!-- Video player -->
+<div id="player" class="player" hidden role="dialog" aria-modal="true" aria-label="Video player">
+  <div class="player-box">
+    <div class="player-head"><span id="playerTitle"></span><button id="playerClose" class="icon-btn" type="button" aria-label="Close">✕</button></div>
+    <video id="video" controls playsinline preload="metadata"></video>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
