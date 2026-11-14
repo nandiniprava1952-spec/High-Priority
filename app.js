@@ -272,7 +272,7 @@
   // ---------- Cover / enter ----------
   function enter() {
     $('#cover').hidden = true; $('#app').hidden = false;
-    document.querySelector('meta[name=theme-color]').content = '#33402a';
+    document.querySelector('meta[name=theme-color]').content = '#e8730c';
     route();
   }
   function showCover() {
@@ -281,6 +281,7 @@
   }
   $('#enter').addEventListener('click', enter);
   $('#home').addEventListener('click', showCover);
+  $('#logo').addEventListener('click', () => { closeVideo(); showCover(); });
   $('#offbtn').addEventListener('click', () => goTab('offline'));
   if (/^#\/(s|t)\//.test(location.hash)) enter();          // deep link skips the cover
 

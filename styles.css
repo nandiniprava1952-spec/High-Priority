@@ -1,7 +1,7 @@
 :root{
   --bg:#f6f1e7; --card:#fffdf8; --ink:#2a2418; --muted:#6f6552;
   --olive:#46553a; --olive-d:#33402a; --amber:#c98a2b; --line:#e5dccb;
-  --radius:16px; --shadow:0 2px 10px rgba(42,36,24,.08);
+  --hdr:#e8730c; --radius:16px; --shadow:0 2px 10px rgba(42,36,24,.08);
   --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme:dark){
@@ -35,14 +35,15 @@ button{font:inherit;color:inherit;cursor:pointer}
 @media (min-width:700px){.cover-content{padding-bottom:64px}}
 
 /* ---------- Top bar ---------- */
-.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px;padding:calc(10px + var(--sat)) 14px 10px;background:var(--olive-d);color:#fff;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px;padding:calc(10px + var(--sat)) 14px 10px;background:var(--hdr);color:#fff;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.logo-btn{background:none;border:0;padding:0;flex:none;display:grid;place-items:center;border-radius:9px;cursor:pointer}
 .brand-logo{border-radius:9px;border:1.5px solid rgba(255,255,255,.7);flex:none}
 .brand{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}
 .brand strong{font-family:Georgia,serif;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brand small{opacity:.8;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.icon-btn{background:rgba(255,255,255,.12);border:0;color:#fff;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none}
-.off-btn{background:rgba(255,255,255,.12);border:0;color:#fff;height:44px;padding:0 12px;border-radius:12px;font-size:13px;font-weight:700;flex:none;white-space:nowrap}
-.net{background:#b3402a;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px}
+.icon-btn{background:rgba(255,255,255,.22);border:0;color:#fff;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none}
+.off-btn{background:rgba(255,255,255,.22);border:0;color:#fff;height:44px;padding:0 12px;border-radius:12px;font-size:13px;font-weight:700;flex:none;white-space:nowrap}
+.net{background:#5a2208;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px}
 
 /* ---------- Main ---------- */
 #main{max-width:980px;margin:0 auto;padding:14px 14px calc(96px + var(--sab))}
