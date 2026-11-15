@@ -1,5 +1,4 @@
 (() => {
-  const APP_VERSION = '7';          // bump together with VERSION in sw.js on every release
   const D = window.MCH_DATA;
   const $ = (s) => document.querySelector(s);
   const main = $('#main');
@@ -355,28 +354,19 @@
   if (/iphone|ipad|ipod/i.test(navigator.userAgent) && !navigator.standalone) $('#iosHint').hidden = false;
 
   // ---------- Offline badge ----------
-  const net = () => ($('#net').hidden = navigator.onLine);
+  const net = () => { const on = navigator.onLine, el = $('#net'); el.classList.toggle('off', !on); el.lastElementChild.textContent = on ? 'Online' : 'Offline'; };
   addEventListener('online', net); addEventListener('offline', net); net();
 
   // ---------- Service worker, update notice, offline index ----------
   OFF.init().then(() => { if (!$('#app').hidden) afterChange(); });
 
-  // After an update: show a one-time "updated" message
-  try {
-    const prev = localStorage.getItem('mch-app-version');
-    localStorage.setItem('mch-app-version', APP_VERSION);
-    if (prev && prev !== APP_VERSION) setTimeout(() => toast('✓ App updated to the latest version'), 900);
-  } catch {}
-
+  // First install: offline saving becomes ready once the service worker takes control.
   if ('serviceWorker' in navigator) {
     const hadController = !!navigator.serviceWorker.controller;
-    addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
     navigator.serviceWorker.addEventListener('controllerchange', () => {
-      if (hadController) {                                   // a new version just took over
-        $('#updateBar').hidden = false;
-      } else if (!$('#app').hidden) afterChange();           // very first install: offline saving is now ready
+      if (!hadController && !$('#app').hidden) afterChange();
     });
-    $('#updateNow').addEventListener('click', () => location.reload());
-    $('#updateLater').addEventListener('click', () => ($('#updateBar').hidden = true));
   }
+
+  // Updates (ring -> Update/Later -> installing -> "Updated") are started from index.html via update-kit.js
 })();

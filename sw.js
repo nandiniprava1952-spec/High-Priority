@@ -1,13 +1,29 @@
 // Bump VERSION whenever you change app files so installed copies update.
-const VERSION = 'mch-v7';
+const VERSION = 'mch-v9';
 const OFFLINE = 'mch-offline-v1';   // files the user saved for offline use (never auto-deleted)
 const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'data.js', 'manifest.webmanifest',
-  'assets/cover.jpg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png', 'icons/apple-touch-icon.png'];
+  'assets/cover.jpg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png', 'icons/apple-touch-icon.png', 'update-kit.js'];
 const IMG = 'mch-images-v1';
 
+// Install: download every app file and report the real progress to the page (drives the update ring).
+// The new version then WAITS; it is switched on only when the user taps "Update" (see update-kit.js).
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL.map((u) => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
+  e.waitUntil((async () => {
+    const c = await caches.open(VERSION);
+    let n = 0, dead = false;
+    const say = async (pct) => { const l = await self.clients.matchAll({ includeUncontrolled: true, type: 'window' }); if (!dead) l.forEach((w) => w.postMessage({ type: 'upk-progress', v: VERSION, pct })); };
+    await say(0);
+    try {
+      await Promise.all(SHELL.map(async (u) => {
+        const r = await fetch(new Request(u, { cache: 'reload' }));
+        if (!r.ok) throw new Error('Could not download ' + u);
+        await c.put(u, r);
+        await say(Math.round(++n / SHELL.length * 100));
+      }));
+    } catch (err) { dead = true; throw err; }     // stop reporting; the old version stays in use
+  })());
 });
+self.addEventListener('message', (e) => { if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting(); });
 self.addEventListener('activate', (e) => {
   e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== VERSION && k !== IMG && k !== OFFLINE).map((k) => caches.delete(k))))
     .then(() => self.clients.claim()));

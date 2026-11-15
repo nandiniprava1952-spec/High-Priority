@@ -17,10 +17,19 @@ PPTX/PDF links and a video gallery. Cover photo: `assets/cover.jpg`. App icon: `
 Change `base` if you move the files. Cover images load online and are cached as they are viewed;
 PDFs, PPTX and videos always need internet.
 
-## Updating
-Edit files, then bump `VERSION` in `sw.js` (e.g. `mch-v8`) and `APP_VERSION` in `app.js` (e.g. '8'). Installed apps show an 'App updated - Refresh' bar, then a confirmation after refreshing.
+## How updates reach users
+The app checks for a new version when it opens, when the user comes back to it, and every 30 minutes
+(logic in `update-kit.js`, which is the same file in all three apps).
+
+1. **Update found** - a card appears at the top with a progress ring and percentage, "Downloading update…".
+2. **Update ready** - at 100% it becomes "Update available" with **Update** and **Later**. *Later* hides the card until the next check.
+3. **Installing** - *Update* shows a spinning ring, "Installing update…", then the app restarts on its own.
+4. **After the restart** - "✔ Updated to the latest version".
+
+**To release an update:** change your files, then bump the version name at the top of `sw.js` (`VERSION`, e.g. `mch-v10`).
+That is the only thing phones look at. `update-kit.js` must stay listed in the file list at the top of `sw.js`.
 
 ## Offline mode
 Every topic and video has a **⬇ Save for offline** button (and day tabs have **Save all**). Saved PPTX/PDF/MP4 files are
 stored on the phone (Cache API) and served by `sw.js`, so they open with no internet. Manage them with the **⬇ Offline** button in the top bar (next to Home).
-Cache names: `mch-offline-v1` (your saved files – kept across updates), `mch-v7` (app shell).
+Cache names: `mch-offline-v1` (your saved files – kept across updates), `mch-vN` (app shell, replaced on each update).

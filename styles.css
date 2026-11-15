@@ -41,7 +41,10 @@ button{font:inherit;color:inherit;cursor:pointer}
 .brand strong{font-family:Georgia,serif;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brand small{opacity:.8;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .icon-btn{background:rgba(255,255,255,.12);border:0;color:#fff;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none}
-.net{background:#b3402a;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px}
+/* online / offline status pill */
+.net{display:inline-flex;align-items:center;gap:6px;flex:none;white-space:nowrap;font:700 11px/1 system-ui,sans-serif;padding:6px 9px;border-radius:99px;background:rgba(0,0,0,.28);color:#fff}
+.net i{width:9px;height:9px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.35);transition:background .25s,box-shadow .25s}
+.net.off i{background:#facc15;box-shadow:0 0 0 3px rgba(250,204,21,.35)}
 
 /* ---------- Main ---------- */
 #main{max-width:980px;margin:0 auto;padding:14px 14px calc(96px + var(--sab))}
@@ -136,7 +139,3 @@ button{font:inherit;color:inherit;cursor:pointer}
 .off-btn.active{background:var(--amber);border-color:var(--amber);color:#1f1808}
 @media (max-width:360px){.brand small{display:none}.off-btn{padding:0 10px;font-size:13px}}
 
-.update-bar{position:fixed;left:12px;right:12px;bottom:calc(76px + var(--sab));z-index:210;display:flex;align-items:center;gap:8px;max-width:520px;margin:0 auto;background:var(--olive-d);color:#fff;border:1.5px solid var(--amber);border-radius:14px;padding:10px 10px 10px 14px;box-shadow:0 8px 24px rgba(0,0,0,.4);font-size:14px;font-weight:600}
-.update-bar span{flex:1}
-.update-bar button{min-height:40px;border:0;border-radius:10px;padding:0 14px;font-weight:700;background:var(--amber);color:#1f1808}
-.update-bar button#updateLater{background:rgba(255,255,255,.15);color:#fff;padding:0 12px}

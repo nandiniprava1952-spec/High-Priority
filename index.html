@@ -38,7 +38,7 @@
     </button>
     <img class="brand-logo" src="icons/icon-192.png" alt="" width="34" height="34">
     <div class="brand"><strong id="title">MCH Training Hub</strong><small id="subtitle">Select a training day</small></div>
-    <span id="net" class="net" hidden>No internet</span>
+    <span id="net" class="net" role="status" aria-live="polite"><i></i><b>Online</b></span>
     <button id="home" class="icon-btn" type="button" aria-label="Cover">
       <svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
     </button>
@@ -47,12 +47,6 @@
 
   <main id="main"></main>
   <nav id="bnav" class="bnav" aria-label="Training sections" hidden></nav>
-</div>
-
-<div id="updateBar" class="update-bar" role="status" hidden>
-  <span>✓ App updated — new version ready</span>
-  <button id="updateNow" type="button">Refresh</button>
-  <button id="updateLater" type="button" aria-label="Dismiss">✕</button>
 </div>
 
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
@@ -66,6 +60,8 @@
   </div>
 </div>
 
+<script src="update-kit.js"></script>
+<script>UpdateKit.init({ id: 'mch', sw: 'sw.js', accent: '#46553a', accentDark: '#8aa06f' });</script>
 <script src="data.js"></script>
 <script src="app.js"></script>
 </body>
