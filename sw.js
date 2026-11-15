@@ -1,13 +1,14 @@
-// Bump VERSION whenever you change app files so installed copies update.
-const VERSION = 'mch-v9';
+// New versions wait until the user taps "Update" in the app (see app.js). Bump VERSION whenever you change app files so installed copies update.
+const VERSION = 'mch-v10';
 const OFFLINE = 'mch-offline-v1';   // files the user saved for offline use (never auto-deleted)
 const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'data.js', 'manifest.webmanifest',
   'assets/cover.jpg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png', 'icons/apple-touch-icon.png'];
 const IMG = 'mch-images-v1';
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(VERSION).then((c) => Promise.all(SHELL.map((f) => fetch(new Request(f, { cache: 'reload' })).then((r) => { if (!r.ok) throw new Error(f); return c.put(f, r); })))).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(VERSION).then((c) => Promise.all(SHELL.map((f) => fetch(new Request(f, { cache: 'reload' })).then((r) => { if (!r.ok) throw new Error(f); return c.put(f, r); })))));
 });
+self.addEventListener('message', (e) => { if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting(); });
 self.addEventListener('activate', (e) => {
   e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== VERSION && k !== IMG && k !== OFFLINE).map((k) => caches.delete(k))))
     .then(() => self.clients.claim()));

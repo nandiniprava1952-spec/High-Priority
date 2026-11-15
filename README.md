@@ -24,3 +24,7 @@ Edit files, then bump `VERSION` in `sw.js` (e.g. `mch-v2`) so installed apps pic
 Every topic and video has a **⬇ Save for offline** button. Saved PPTX/PDF/MP4 files are
 stored on the phone (Cache API) and served by `sw.js`, so they open with no internet. Manage them with the **⬇ Offline** button in the top bar.
 Cache names: `mch-offline-v1` (your saved files – kept across updates), `mch-v6` (app shell).
+
+
+## Updates
+When you publish a new version (bump `VERSION` in `sw.js`), installed apps show an **Update** banner. Tapping **Update** reloads into the new version; **Later** dismisses it until the next check.

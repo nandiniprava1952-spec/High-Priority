@@ -334,7 +334,25 @@
   // ---------- Service worker + offline index ----------
   OFF.init().then(() => { if (!$('#app').hidden) afterChange(); });
   if ('serviceWorker' in navigator) {
-    addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
-    navigator.serviceWorker.addEventListener('controllerchange', () => { if (!$('#app').hidden) afterChange(); });
+    let updating = false;
+    const showUpdate = (worker) => {
+      $('#update').hidden = false;
+      $('#updNow').onclick = () => { updating = true; $('#updNow').textContent = 'Updating…'; worker.postMessage({ type: 'SKIP_WAITING' }); };
+      $('#updLater').onclick = () => { $('#update').hidden = true; };
+    };
+    addEventListener('load', () => navigator.serviceWorker.register('sw.js').then((reg) => {
+      if (reg.waiting && navigator.serviceWorker.controller) showUpdate(reg.waiting);
+      reg.addEventListener('updatefound', () => {
+        const w = reg.installing;
+        if (w) w.addEventListener('statechange', () => { if (w.state === 'installed' && navigator.serviceWorker.controller) showUpdate(w); });
+      });
+      const check = () => reg.update().catch(() => {});
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) check(); });
+      setInterval(check, 30 * 60 * 1000);
+    }).catch(() => {}));
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (updating) return location.reload();
+      if (!$('#app').hidden) afterChange();
+    });
   }
 })();

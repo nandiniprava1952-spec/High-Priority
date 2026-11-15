@@ -132,3 +132,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 .note{background:rgba(201,138,43,.14);border:1px solid var(--amber);border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:14px}
 .detail>.save{margin-bottom:-4px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + var(--sab));z-index:200;max-width:min(92vw,460px);background:#2a2418;color:#fff;padding:12px 16px;border-radius:12px;font-size:14px;box-shadow:0 6px 20px rgba(0,0,0,.35);text-align:center}
+
+.update{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(140px + var(--sab));z-index:210;width:min(92vw,460px);display:flex;align-items:center;gap:8px;background:#2a2418;color:#fff;padding:10px 12px 10px 16px;border-radius:14px;font-size:14px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+.update[hidden]{display:none}
+.update span{flex:1}
+.update button{border:0;border-radius:10px;height:38px;padding:0 14px;font-weight:700;font-size:14px;background:#e8a24a;color:#2a2418;cursor:pointer}
+.update button.later{background:rgba(255,255,255,.15);color:#fff}
