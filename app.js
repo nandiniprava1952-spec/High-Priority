@@ -141,7 +141,7 @@
   function saveAllBtn(tabId, units) {
     const left = units.filter((u) => unitState(u) !== 'saved').length;
     const what = tabId === 'video_gallery' ? 'videos' : 'topics';
-    return `<button class="saveall ${left ? '' : 'done'}" data-saveall="${tabId}">${left ? `⬇ Save all ${left} ${what} for offline` : `✓ All ${what} saved offline`}</button>`;
+    return `<button class="saveall ${left ? '' : 'done'}" data-saveall="${tabId}" aria-label="${left ? `Save all ${left} ${what} for offline` : `All ${what} saved offline`}" title="${left ? `Save all ${left} ${what} for offline` : `All ${what} saved offline`}">${left ? `⬇ ${left}` : `✓`}</button>`;
   }
 
   // ---------- Views ----------
@@ -191,7 +191,7 @@
     const saved = unitState('s:' + s.id) === 'saved';
     return `<button class="card" data-sec="${s.id}">
       <img class="thumb" loading="lazy" src="${esc(U(s.items[0].image))}" alt="" onerror="this.style.visibility='hidden'">
-      <div class="meta"><div class="num">TOPIC ${s.num}${saved ? ' <span class="chip">⬇ OFFLINE</span>' : ''}</div><div class="ttl">${esc(s.title)}</div></div>
+      <div class="meta"><div class="num">TOPIC ${s.num}${saved ? ' <span class="chip" title="Saved offline" aria-label="Saved offline">⬇</span>' : ''}</div><div class="ttl">${esc(s.title)}</div></div>
       <span class="tick ${viewed.has(s.id) ? 'on' : ''}">✓</span>
     </button>`;
   }
@@ -228,7 +228,7 @@
     const prev = D.sections[i - 1], next = D.sections[i + 1];
     const file = (f, label, view) => {
       const saved = OFF.has(f), local = 'offline-file/' + f;
-      if (saved) return `<div class="label">${label} · ⬇ saved</div>
+      if (saved) return `<div class="label">${label} · ⬇</div>
         <a class="act fill" target="_blank" rel="noopener" href="${esc(local)}">📂 Open</a>
         <a class="act" href="${esc(local)}" download="${esc(base(f))}" aria-label="Download" title="Download">📥</a>`;
       return `<div class="label">${label}</div>
