@@ -334,10 +334,26 @@
   // ---------- Service worker + offline index ----------
   OFF.init().then(() => { if (!$('#app').hidden) afterChange(); });
   if ('serviceWorker' in navigator) {
-    let updating = false;
+    let updating = false, progress = null;
+    const startProgress = () => {
+      const C = 326.73, ov = $('#updOverlay'), ring = $('#ringFg'), line = $('#updLine'), pct = $('#updPct'), msg = $('#updMsg');
+      let p = 0;
+      const set = (v) => {
+        p = v; ring.style.strokeDashoffset = C * (1 - v / 100); line.style.width = v + '%'; pct.textContent = Math.round(v) + '%';
+        msg.textContent = v >= 100 ? 'Restarting…' : v < 35 ? 'Downloading…' : v < 75 ? 'Installing…' : 'Almost done…';
+      };
+      ov.hidden = false; set(0);
+      const t = setInterval(() => set(p + (92 - p) * 0.07), 100);
+      return { done() { clearInterval(t); set(100); setTimeout(() => location.reload(), 600); } };
+    };
     const showUpdate = (worker) => {
       $('#update').hidden = false;
-      $('#updNow').onclick = () => { updating = true; $('#updNow').textContent = 'Updating…'; worker.postMessage({ type: 'SKIP_WAITING' }); };
+      $('#updNow').onclick = () => {
+        updating = true; $('#update').hidden = true;
+        progress = startProgress();
+        setTimeout(() => location.reload(), 12000);   // safety net if activation is slow
+        worker.postMessage({ type: 'SKIP_WAITING' });
+      };
       $('#updLater').onclick = () => { $('#update').hidden = true; };
     };
     addEventListener('load', () => navigator.serviceWorker.register('sw.js').then((reg) => {
@@ -351,7 +367,7 @@
       setInterval(check, 30 * 60 * 1000);
     }).catch(() => {}));
     navigator.serviceWorker.addEventListener('controllerchange', () => {
-      if (updating) return location.reload();
+      if (updating) { if (progress) progress.done(); else location.reload(); return; }
       if (!$('#app').hidden) afterChange();
     });
   }

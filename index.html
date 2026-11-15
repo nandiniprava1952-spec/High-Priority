@@ -49,7 +49,18 @@
   <nav id="bnav" class="bnav" aria-label="Training sections" hidden></nav>
 </div>
 
-<div id="update" class="update" role="alert" hidden><span>🔄 A new version is available</span><button id="updNow" type="button">Update</button><button id="updLater" type="button" class="later">Later</button></div>
+<div id="update" class="update" role="alert" hidden><span>🔄 A new version is available</span><button id="updNow" type="button">Update / ଅପଡେଟ୍</button><button id="updLater" type="button" class="later">Later</button></div>
+<div id="updOverlay" class="upd-overlay" role="alertdialog" aria-live="polite" aria-label="Updating app" hidden>
+  <div class="upd-card">
+    <div class="ring-wrap">
+      <svg class="ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="trk" cx="60" cy="60" r="52"/><circle id="ringFg" class="fg" cx="60" cy="60" r="52"/></svg>
+      <div id="updPct" class="pct">0%</div>
+    </div>
+    <div class="upd-title">Updating / ଅପଡେଟ୍ ହେଉଛି</div>
+    <div id="updMsg" class="upd-msg">Downloading…</div>
+    <div class="upd-line"><i id="updLine"></i></div>
+  </div>
+</div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
 <!-- Video player -->

@@ -138,3 +138,17 @@ button{font:inherit;color:inherit;cursor:pointer}
 .update span{flex:1}
 .update button{border:0;border-radius:10px;height:38px;padding:0 14px;font-weight:700;font-size:14px;background:#e8a24a;color:#2a2418;cursor:pointer}
 .update button.later{background:rgba(255,255,255,.15);color:#fff}
+
+.upd-overlay{position:fixed;inset:0;z-index:300;background:rgba(42,36,24,.94);display:grid;place-items:center;padding:24px}
+.upd-overlay[hidden]{display:none}
+.upd-card{width:min(86vw,320px);text-align:center;color:#fff}
+.ring-wrap{position:relative;width:132px;height:132px;margin:0 auto 18px}
+.ring{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:9}
+.ring .trk{stroke:rgba(255,255,255,.18)}
+.ring .fg{stroke:#e8a24a;stroke-linecap:round;stroke-dasharray:326.73;stroke-dashoffset:326.73;transition:stroke-dashoffset .15s linear}
+.pct{position:absolute;inset:0;display:grid;place-items:center;font-size:28px;font-weight:800}
+.upd-title{font-size:17px;font-weight:800;margin-bottom:4px}
+.upd-msg{font-size:13px;opacity:.8;margin-bottom:16px}
+.upd-line{height:8px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden}
+.upd-line i{display:block;height:100%;width:0;background:#e8a24a;border-radius:99px;transition:width .15s linear}
