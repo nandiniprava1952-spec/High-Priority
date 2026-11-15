@@ -36,6 +36,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 /* ---------- Top bar ---------- */
 .topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px;padding:calc(10px + var(--sat)) 14px 10px;background:var(--olive-d);color:#fff;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.logo-btn{background:none;border:0;padding:0;flex:none;display:grid;cursor:pointer}
 .brand-logo{border-radius:9px;border:1.5px solid rgba(255,255,255,.7);flex:none}
 .brand{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}
 .brand strong{font-family:Georgia,serif;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

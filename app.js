@@ -306,7 +306,12 @@
     document.querySelector('meta[name=theme-color]').content = '#2a2418';
   }
   $('#enter').addEventListener('click', enter);
-  $('#home').addEventListener('click', showCover);
+  $('#logoBtn').addEventListener('click', showCover);            // header logo -> cover image page
+  $('#home').addEventListener('click', () => {                   // header home -> menu list page
+    query = '';
+    if (location.hash === '#/' || location.hash === '') route(); else location.hash = '#/';
+    scrollTo(0, 0);
+  });
   if (/^#\/(s|t)\//.test(location.hash)) enter();          // deep link skips the cover
 
   // ---------- Video player ----------
