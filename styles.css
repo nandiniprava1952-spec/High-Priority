@@ -40,6 +40,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .brand{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}
 .brand strong{font-family:Georgia,serif;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brand small{opacity:.8;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#hInstall{font-size:20px;line-height:1}
 .icon-btn{background:rgba(255,255,255,.12);border:0;color:#fff;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none}
 /* online / offline status pill */
 .net{display:inline-flex;align-items:center;gap:6px;flex:none;white-space:nowrap;font:700 11px/1 system-ui,sans-serif;padding:6px 9px;border-radius:99px;background:rgba(0,0,0,.28);color:#fff}
@@ -98,7 +99,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .player{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.88);display:grid;place-items:center;padding:12px}
 .player-box{width:min(960px,100%);background:#000;border-radius:16px;overflow:hidden}
 .player-head{display:flex;justify-content:space-between;align-items:center;padding:8px 8px 8px 16px;color:#fff;font-weight:600}
-.player-head .icon-btn{background:rgba(255,255,255,.15)}
+.player-head #hInstall{font-size:20px;line-height:1}
+.icon-btn{background:rgba(255,255,255,.15)}
 #video{width:100%;max-height:78vh;background:#000;display:block}
 
 @media (prefers-reduced-motion:reduce){.cover-img{animation:none}}
@@ -136,6 +138,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + var(--sab));z-index:200;max-width:min(92vw,460px);background:#2a2418;color:#fff;padding:12px 16px;border-radius:12px;font-size:14px;box-shadow:0 6px 20px rgba(0,0,0,.35);text-align:center}
 
 .off-btn{flex:none;height:44px;padding:0 13px;border-radius:12px;border:1.5px solid rgba(255,255,255,.55);background:rgba(255,255,255,.12);color:#fff;font-size:14px;font-weight:700;white-space:nowrap}
+.off-btn.busy{opacity:.85;font-size:12px}
 .off-btn.active{background:var(--amber);border-color:var(--amber);color:#1f1808}
 @media (max-width:360px){.brand small{display:none}.off-btn{padding:0 10px;font-size:13px}}
 

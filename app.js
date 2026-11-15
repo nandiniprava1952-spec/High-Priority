@@ -122,26 +122,27 @@
     if (!quiet) { toast('Removed from offline storage'); afterChange(); }
   }
 
+  // Header ⬇ : save every topic and video in one go (opens the Offline view when all is already saved)
   let bulk = null;
-  async function saveAll(tabId) {
+  const allUnits = () => [...D.sections.map((x) => 's:' + x.id), ...D.videos.map((_, i) => 'v:' + i)];
+  const offBtn = $('#offBtn');
+  function paintBulk() {
+    if (bulk) { offBtn.textContent = `${bulk.i}/${bulk.n}`; offBtn.classList.add('busy'); }
+    else { offBtn.textContent = '⬇'; offBtn.classList.remove('busy'); }
+  }
+  async function saveEverything() {
     if (bulk) return;
-    const units = tabId === 'video_gallery' ? D.videos.map((_, i) => 'v:' + i) : D.sections.filter((s) => s.day === tabId).map((s) => 's:' + s.id);
-    const todo = units.filter((u) => unitState(u) !== 'saved');
-    if (!todo.length) return;
+    if (!OFF.ok) return toast('Offline saving is not ready yet — reload the app once and try again.');
+    const todo = allUnits().filter((u) => unitState(u) !== 'saved');
+    if (!todo.length) { $('#cover').hidden = true; goTab('offline'); return; }
     if (!navigator.onLine) return toast('You are offline — connect to the internet to save.');
-    if (!confirm(`Save ${todo.length} item${todo.length > 1 ? 's' : ''} for offline use?\nThis uses mobile data and phone storage.`)) return;
-    bulk = { tabId, i: 0, n: todo.length }; paintBulk();
+    if (!confirm(`Save all ${todo.length} remaining item${todo.length > 1 ? 's' : ''} for offline use?\nThis includes videos, so it uses a lot of mobile data and phone storage. Use WiFi if you can.`)) return;
+    bulk = { i: 0, n: todo.length }; paintBulk();
     try {
       for (const u of todo) { bulk.i++; paintBulk(); await saveUnit(u, true); }
-      toast('All saved — available offline');
+      toast('Everything saved — available offline');
     } catch { /* toast already shown */ }
-    bulk = null; afterChange();
-  }
-  function paintBulk() { const b = document.querySelector('[data-saveall]'); if (b && bulk) { b.textContent = `Saving ${bulk.i} of ${bulk.n}…`; b.classList.add('busy'); } }
-  function saveAllBtn(tabId, units) {
-    const left = units.filter((u) => unitState(u) !== 'saved').length;
-    const what = tabId === 'video_gallery' ? 'videos' : 'topics';
-    return `<button class="saveall ${left ? '' : 'done'}" data-saveall="${tabId}" aria-label="${left ? `Save all ${left} ${what} for offline` : `All ${what} saved offline`}" title="${left ? `Save all ${left} ${what} for offline` : `All ${what} saved offline`}">${left ? `⬇ ${left}` : `✓`}</button>`;
+    bulk = null; paintBulk(); afterChange();
   }
 
   // ---------- Views ----------
@@ -159,7 +160,7 @@
 
     if (tab.id === 'video_gallery' && !query) {
       const us = D.videos.map((_, i) => 'v:' + i);
-      main.innerHTML = (OFF.ok ? saveAllBtn(tab.id, us) : '') + `<div class="vgrid">${D.videos.map((v, i) => `
+      main.innerHTML = `<div class="vgrid">${D.videos.map((v, i) => `
         <div class="vcard">
           <button class="poster" data-video="${i}" aria-label="Play ${esc(v.title)}"><img loading="lazy" src="${esc(U(v.cover))}" alt="" onerror="this.style.display='none'"><span class="play"></span></button>
           <div class="vfoot"><span class="vt">${esc(v.title)}</span>${OFF.ok ? unitBtn('v:' + i, true) : ''}</div>
@@ -176,8 +177,7 @@
     main.innerHTML =
       `<input id="q" class="search" type="search" placeholder="Search all topics…" value="${esc(query)}" autocomplete="off">` +
       (q ? `<div class="progress">${list.length} result${list.length === 1 ? '' : 's'}</div>` :
-        `<div class="progress">${done} of ${mine.length} topics viewed<div class="bar"><i style="width:${mine.length ? done / mine.length * 100 : 0}%"></i></div></div>` +
-        (OFF.ok ? saveAllBtn(tab.id, mine.map((s) => 's:' + s.id)) : '')) +
+        `<div class="progress">${done} of ${mine.length} topics viewed<div class="bar"><i style="width:${mine.length ? done / mine.length * 100 : 0}%"></i></div></div>`) +
       (list.length ? `<div class="grid">${list.map((s) => cardHtml(s, viewed)).join('')}</div>` : `<div class="empty">No topics match “${esc(query)}”.</div>`);
 
     const q$ = $('#q');
@@ -207,7 +207,7 @@
          <small>${OFF.sizes.size} file${OFF.sizes.size === 1 ? '' : 's'} · <span id="quota"></span></small></div>
          ${empty ? '' : '<button class="rm wide" data-clearall="1">Remove all</button>'}</div>` +
       (OFF.ok ? '' : `<div class="note">Offline saving becomes available after the app has loaded once with internet. Reload the app to enable it.</div>`) +
-      (empty ? `<div class="empty">Open any topic or video and tap <b>⬇</b>,<br>or use <b>Save all</b> on a day tab.<br>Saved items open without internet.</div>` : '') +
+      (empty ? `<div class="empty">Open any topic or video and tap <b>⬇</b>,<br>or tap <b>⬇</b> in the top bar to save everything.<br>Saved items open without internet.</div>` : '') +
       (secs.length ? `<h3 class="sub">Topics</h3><div class="grid">${secs.map((s) => `
         <div class="row">${cardHtml(s, viewed)}<button class="rm" data-remove="s:${s.id}" aria-label="Remove">🗑</button></div>`).join('')}</div>` : '') +
       (vids.length ? `<h3 class="sub">Videos</h3><div class="vgrid">${vids.map(({ v, i }) => `
@@ -272,7 +272,7 @@
   const goTab = (id) => { query = ''; const h = '#/t/' + id; if (location.hash === h) route(); else location.hash = h; scrollTo(0, 0); };
 
   main.addEventListener('click', (e) => {
-    const t = e.target.closest('[data-sec],[data-video],[data-unit],[data-saveall],[data-remove],[data-clearall]');
+    const t = e.target.closest('[data-sec],[data-video],[data-unit],[data-remove],[data-clearall]');
     if (!t) return;
     const d = t.dataset;
     if (d.sec) location.hash = '#/s/' + d.sec;
@@ -282,12 +282,11 @@
       if (unitState(d.unit) === 'saved') { if (confirm('Remove this from offline storage?')) removeUnit(d.unit); }
       else saveUnit(d.unit).catch(() => {});
     }
-    else if (d.saveall) saveAll(d.saveall);
     else if (d.remove) { if (confirm('Remove this from offline storage?')) removeUnit(d.remove); }
     else if (d.clearall) { if (confirm('Remove everything saved for offline use?')) caches.delete(OFF.name).then(() => { OFF.sizes.clear(); toast('Offline storage cleared'); afterChange(); }); }
   });
   $('#bnav').addEventListener('click', (e) => { const t = e.target.closest('[data-tab]'); if (t) goTab(t.dataset.tab); });
-  $('#offBtn').addEventListener('click', () => { $('#cover').hidden = true; goTab('offline'); });
+  offBtn.addEventListener('click', saveEverything);
   $('#back').addEventListener('click', () => (history.length > 1 ? history.back() : (location.hash = '#/')));
 
   // Online-only links (Google viewer / GitHub) while offline
@@ -348,10 +347,16 @@
 
   // ---------- Install ----------
   let deferred;
-  addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferred = e; $('#install').hidden = false; });
-  $('#install').addEventListener('click', async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; $('#install').hidden = true; });
-  addEventListener('appinstalled', () => { $('#install').hidden = true; });
-  if (/iphone|ipad|ipod/i.test(navigator.userAgent) && !navigator.standalone) $('#iosHint').hidden = false;
+  addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferred = e; $('#install').hidden = false; $('#hInstall').hidden = false; });
+  $('#install').addEventListener('click', async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; $('#install').hidden = true; $('#hInstall').hidden = deferred === null && !iosInstallable; });
+  addEventListener('appinstalled', () => { $('#install').hidden = true; $('#hInstall').hidden = true; });
+  const iosInstallable = /iphone|ipad|ipod/i.test(navigator.userAgent) && !navigator.standalone;
+  if (iosInstallable) { $('#iosHint').hidden = false; $('#hInstall').hidden = false; }
+  // header 📲: same as the cover's Install button; on iPhone it shows how to add to Home Screen
+  $('#hInstall').addEventListener('click', async () => {
+    if (deferred) { deferred.prompt(); await deferred.userChoice; deferred = null; $('#install').hidden = true; $('#hInstall').hidden = !iosInstallable; }
+    else toast('To install: tap Share, then Add to Home Screen.');
+  });
 
   // ---------- Offline badge ----------
   const net = () => { const on = navigator.onLine, el = $('#net'); el.classList.toggle('off', !on); el.lastElementChild.textContent = on ? 'Online' : 'Offline'; };
