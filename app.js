@@ -86,8 +86,8 @@
     let txt, cls = 'save' + (mini ? ' mini' : '');
     if (busy !== undefined) { txt = mini ? busy + '%' : `Saving… ${busy}%`; cls += ' busy'; }
     else if (st === 'saved') { txt = mini ? '✓' : '✓ Saved offline · tap to remove'; cls += ' done'; }
-    else { txt = mini ? '⬇' : st === 'partial' ? '⬇ Finish saving offline' : '⬇ Save for offline'; }
-    return `<button class="${cls}" data-unit="${u}" aria-label="Save offline">${txt}</button>`;
+    else { txt = '⬇'; }
+    return `<button class="${cls}" data-unit="${u}" aria-label="Save offline" title="Save for offline">${txt}</button>`;
   }
   const paint = (u) => document.querySelectorAll(`[data-unit="${u}"]`).forEach((el) => (el.outerHTML = unitBtn(u, el.classList.contains('mini'))));
   function afterChange() { const y = scrollY; route(); scrollTo(0, y); }
@@ -207,7 +207,7 @@
          <small>${OFF.sizes.size} file${OFF.sizes.size === 1 ? '' : 's'} · <span id="quota"></span></small></div>
          ${empty ? '' : '<button class="rm wide" data-clearall="1">Remove all</button>'}</div>` +
       (OFF.ok ? '' : `<div class="note">Offline saving becomes available after the app has loaded once with internet. Reload the app to enable it.</div>`) +
-      (empty ? `<div class="empty">Open any topic or video and tap <b>⬇ Save for offline</b>,<br>or use <b>Save all</b> on a day tab.<br>Saved items open without internet.</div>` : '') +
+      (empty ? `<div class="empty">Open any topic or video and tap <b>⬇</b>,<br>or use <b>Save all</b> on a day tab.<br>Saved items open without internet.</div>` : '') +
       (secs.length ? `<h3 class="sub">Topics</h3><div class="grid">${secs.map((s) => `
         <div class="row">${cardHtml(s, viewed)}<button class="rm" data-remove="s:${s.id}" aria-label="Remove">🗑</button></div>`).join('')}</div>` : '') +
       (vids.length ? `<h3 class="sub">Videos</h3><div class="vgrid">${vids.map(({ v, i }) => `
@@ -230,10 +230,10 @@
       const saved = OFF.has(f), local = 'offline-file/' + f;
       if (saved) return `<div class="label">${label} · ⬇ saved</div>
         <a class="act fill" target="_blank" rel="noopener" href="${esc(local)}">📂 Open</a>
-        <a class="act" href="${esc(local)}" download="${esc(base(f))}">⬇ Download</a>`;
+        <a class="act" href="${esc(local)}" download="${esc(base(f))}" aria-label="Download" title="Download">📥</a>`;
       return `<div class="label">${label}</div>
         <a class="act fill" data-online target="_blank" rel="noopener" href="${esc(VIEW(f))}">👁 View</a>
-        <a class="act" data-online target="_blank" rel="noopener" href="${esc(U(f))}" download>⬇ Download</a>`;
+        <a class="act" data-online target="_blank" rel="noopener" href="${esc(U(f))}" download aria-label="Download" title="Download">📥</a>`;
     };
     main.innerHTML = `<div class="detail">
       ${OFF.ok ? unitBtn('s:' + s.id) : ''}

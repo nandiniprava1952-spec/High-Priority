@@ -30,6 +30,6 @@ The app checks for a new version when it opens, when the user comes back to it, 
 That is the only thing phones look at. `update-kit.js` must stay listed in the file list at the top of `sw.js`.
 
 ## Offline mode
-Every topic and video has a **⬇ Save for offline** button (and day tabs have **Save all**). Saved PPTX/PDF/MP4 files are
-stored on the phone (Cache API) and served by `sw.js`, so they open with no internet. Manage them with the **⬇ Offline** button in the top bar (next to Home).
+Every topic and video has a **⬇** button (and day tabs have **Save all**). Saved PPTX/PDF/MP4 files are
+stored on the phone (Cache API) and served by `sw.js`, so they open with no internet. Manage them with the **⬇** button in the top bar (next to Home).
 Cache names: `mch-offline-v1` (your saved files – kept across updates), `mch-vN` (app shell, replaced on each update).
