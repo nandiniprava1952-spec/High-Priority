@@ -352,15 +352,18 @@
 
   // ---------- Install ----------
   let deferred;
-  addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferred = e; $('#install').hidden = false; $('#hInstall').hidden = false; });
-  $('#install').addEventListener('click', async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; $('#install').hidden = true; $('#hInstall').hidden = deferred === null && !iosInstallable; });
+  const isApp = () => navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
+  const installHelp = () => toast(/iphone|ipad|ipod/i.test(navigator.userAgent) ? 'To install: tap Share, then Add to Home Screen.' : 'To install: open the browser menu (⋮) and tap Install app or Add to Home screen.');
+  $('#install').hidden = isApp();   // cover button shows right away, unless already installed
+  addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferred = e; $('#install').hidden = isApp(); $('#hInstall').hidden = isApp(); });
+  $('#install').addEventListener('click', async () => { if (!deferred) return installHelp(); deferred.prompt(); await deferred.userChoice; deferred = null; });
   addEventListener('appinstalled', () => { $('#install').hidden = true; $('#hInstall').hidden = true; });
   const iosInstallable = /iphone|ipad|ipod/i.test(navigator.userAgent) && !navigator.standalone;
   if (iosInstallable) { $('#iosHint').hidden = false; $('#hInstall').hidden = false; }
   // header 📲: same as the cover's Install button; on iPhone it shows how to add to Home Screen
   $('#hInstall').addEventListener('click', async () => {
-    if (deferred) { deferred.prompt(); await deferred.userChoice; deferred = null; $('#install').hidden = true; $('#hInstall').hidden = !iosInstallable; }
-    else toast('To install: tap Share, then Add to Home Screen.');
+    if (deferred) { deferred.prompt(); await deferred.userChoice; deferred = null; }
+    else installHelp();
   });
 
   // ---------- Offline badge ----------
