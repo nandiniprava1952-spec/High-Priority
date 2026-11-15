@@ -1,14 +1,13 @@
-// New versions wait until the user taps "Update" in the app (see app.js). Bump VERSION whenever you change app files so installed copies update.
-const VERSION = 'mch-v12';
+// Bump VERSION whenever you change app files so installed copies update.
+const VERSION = 'mch-v5';
 const OFFLINE = 'mch-offline-v1';   // files the user saved for offline use (never auto-deleted)
 const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'data.js', 'manifest.webmanifest',
   'assets/cover.jpg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png', 'icons/apple-touch-icon.png'];
 const IMG = 'mch-images-v1';
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(VERSION).then((c) => Promise.all(SHELL.map((f) => fetch(new Request(f, { cache: 'reload' })).then((r) => { if (!r.ok) throw new Error(f); return c.put(f, r); })))));
+  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
 });
-self.addEventListener('message', (e) => { if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting(); });
 self.addEventListener('activate', (e) => {
   e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== VERSION && k !== IMG && k !== OFFLINE).map((k) => caches.delete(k))))
     .then(() => self.clients.claim()));
@@ -42,10 +41,11 @@ self.addEventListener('fetch', (e) => {
     e.respondWith(fetch(req).catch(() => caches.match('index.html')));
     return;
   }
-  if (url.origin === location.origin) {                            // app files: network first (always latest), cache when offline
+  if (url.origin === location.origin) {                            // app files: stale-while-revalidate
     e.respondWith(caches.open(VERSION).then(async (c) => {
-      try { const r = await fetch(req, { cache: 'no-cache' }); if (r.ok) c.put(req, r.clone()); return r; }
-      catch { return (await c.match(req)) || Response.error(); }
+      const hit = await c.match(req);
+      const net = fetch(req).then((r) => { if (r.ok) c.put(req, r.clone()); return r; }).catch(() => hit);
+      return hit || net;
     }));
     return;
   }

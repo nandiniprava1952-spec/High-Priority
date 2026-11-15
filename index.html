@@ -36,11 +36,11 @@
     <button id="back" class="icon-btn" type="button" aria-label="Back" hidden>
       <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
-    <button id="logo" class="logo-btn" type="button" aria-label="Back to cover page"><img class="brand-logo" src="icons/icon-192.png" alt="" width="34" height="34"></button>
+    <img class="brand-logo" src="icons/icon-192.png" alt="" width="34" height="34">
     <div class="brand"><strong id="title">MCH Training Hub</strong><small id="subtitle">Select a training day</small></div>
-    <span id="net" class="net" hidden>Offline</span>
-    <button id="offbtn" class="off-btn" type="button" aria-label="Offline downloads">⬇ Offline</button>
-    <button id="home" class="icon-btn" type="button" aria-label="Home">
+    <span id="net" class="net" hidden>No internet</span>
+    <button id="offBtn" class="off-btn" type="button" aria-label="Offline saved items">⬇ Offline</button>
+    <button id="home" class="icon-btn" type="button" aria-label="Cover">
       <svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
     </button>
   </header>
@@ -49,18 +49,6 @@
   <nav id="bnav" class="bnav" aria-label="Training sections" hidden></nav>
 </div>
 
-<div id="update" class="update" role="alert" hidden><span>🔄 A new version is available</span><button id="updNow" type="button">Update / ଅପଡେଟ୍</button><button id="updLater" type="button" class="later">Later</button></div>
-<div id="updOverlay" class="upd-overlay" role="alertdialog" aria-live="polite" aria-label="Updating app" hidden>
-  <div class="upd-card">
-    <div class="ring-wrap">
-      <svg class="ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="trk" cx="60" cy="60" r="52"/><circle id="ringFg" class="fg" cx="60" cy="60" r="52"/></svg>
-      <div id="updPct" class="pct">0%</div>
-    </div>
-    <div class="upd-title">Updating / ଅପଡେଟ୍ ହେଉଛି</div>
-    <div id="updMsg" class="upd-msg">Downloading…</div>
-    <div class="upd-line"><i id="updLine"></i></div>
-  </div>
-</div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
 <!-- Video player -->
