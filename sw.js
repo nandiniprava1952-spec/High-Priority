@@ -1,12 +1,12 @@
 // Bump VERSION whenever you change app files so installed copies update.
-const VERSION = 'mch-v5';
+const VERSION = 'mch-v7';
 const OFFLINE = 'mch-offline-v1';   // files the user saved for offline use (never auto-deleted)
 const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'data.js', 'manifest.webmanifest',
   'assets/cover.jpg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png', 'icons/apple-touch-icon.png'];
 const IMG = 'mch-images-v1';
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL.map((u) => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', (e) => {
   e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== VERSION && k !== IMG && k !== OFFLINE).map((k) => caches.delete(k))))

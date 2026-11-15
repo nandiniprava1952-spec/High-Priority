@@ -18,9 +18,9 @@ Change `base` if you move the files. Cover images load online and are cached as 
 PDFs, PPTX and videos always need internet.
 
 ## Updating
-Edit files, then bump `VERSION` in `sw.js` (e.g. `mch-v2`) so installed apps pick up the change.
+Edit files, then bump `VERSION` in `sw.js` (e.g. `mch-v8`) and `APP_VERSION` in `app.js` (e.g. '8'). Installed apps show an 'App updated - Refresh' bar, then a confirmation after refreshing.
 
 ## Offline mode
 Every topic and video has a **⬇ Save for offline** button (and day tabs have **Save all**). Saved PPTX/PDF/MP4 files are
 stored on the phone (Cache API) and served by `sw.js`, so they open with no internet. Manage them with the **⬇ Offline** button in the top bar (next to Home).
-Cache names: `mch-offline-v1` (your saved files – kept across updates), `mch-v5` (app shell).
+Cache names: `mch-offline-v1` (your saved files – kept across updates), `mch-v7` (app shell).

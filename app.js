@@ -1,4 +1,5 @@
 (() => {
+  const APP_VERSION = '7';          // bump together with VERSION in sw.js on every release
   const D = window.MCH_DATA;
   const $ = (s) => document.querySelector(s);
   const main = $('#main');
@@ -357,10 +358,25 @@
   const net = () => ($('#net').hidden = navigator.onLine);
   addEventListener('online', net); addEventListener('offline', net); net();
 
-  // ---------- Service worker + offline index ----------
+  // ---------- Service worker, update notice, offline index ----------
   OFF.init().then(() => { if (!$('#app').hidden) afterChange(); });
+
+  // After an update: show a one-time "updated" message
+  try {
+    const prev = localStorage.getItem('mch-app-version');
+    localStorage.setItem('mch-app-version', APP_VERSION);
+    if (prev && prev !== APP_VERSION) setTimeout(() => toast('✓ App updated to the latest version'), 900);
+  } catch {}
+
   if ('serviceWorker' in navigator) {
+    const hadController = !!navigator.serviceWorker.controller;
     addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
-    navigator.serviceWorker.addEventListener('controllerchange', () => { if (!$('#app').hidden) afterChange(); });
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (hadController) {                                   // a new version just took over
+        $('#updateBar').hidden = false;
+      } else if (!$('#app').hidden) afterChange();           // very first install: offline saving is now ready
+    });
+    $('#updateNow').addEventListener('click', () => location.reload());
+    $('#updateLater').addEventListener('click', () => ($('#updateBar').hidden = true));
   }
 })();
